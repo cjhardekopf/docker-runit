@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Make the environment available
+env > /opt/env
+
+if [ "$#" -gt 0 ] ; then
+    # A CMD was specified so I need to make sure that it runs
+    mkdir -p /etc/sv/CMD
+    cat > /etc/sv/CMD/run <<END
+#!/bin/sh
+. /opt/env
+exec "$@"
+END
+    chmod a+x /etc/sv/CMD/run
+
+    cat > /etc/sv/CMD/finish <<END
+#!/bin/sh
+exec kill 1
+END
+    chmod a+x /etc/sv/CMD/finish
+
+    ln -s /etc/sv/CMD /etc/service/
+fi
+
+exec /usr/sbin/runsvdir-start
+
