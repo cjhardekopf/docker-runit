@@ -9,7 +9,7 @@ if [ "$#" -gt 0 ] ; then
     cat > /etc/sv/CMD/run <<END
 #!/bin/sh
 . /opt/env
-exec "$@"
+exec /usr/bin/stdbuf -i0 -oL -eL "$@"
 END
     chmod a+x /etc/sv/CMD/run
 
